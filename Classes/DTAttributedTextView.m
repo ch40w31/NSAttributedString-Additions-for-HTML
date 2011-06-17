@@ -102,7 +102,7 @@
 
 - (void)setBackgroundColor:(UIColor *)newColor
 {
-	if ([newColor alpha]<1.0)
+	if ([newColor respondsToSelector:@selector(alpha)] && [newColor alpha] < 1.0)
 	{
 		super.backgroundColor = newColor;
 		contentView.backgroundColor = [UIColor clearColor];
