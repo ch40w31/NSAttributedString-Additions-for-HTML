@@ -36,6 +36,8 @@ NSString *DTDefaultFontFamily = @"DTDefaultFontFamily";
 NSString *DTDefaultTextColor = @"DTDefaultTextColor";
 NSString *DTDefaultLinkColor = @"DTDefaultLinkColor";
 NSString *DTDefaultLinkDecoration = @"DTDefaultLinkDecoration";
+NSString *DTDefaultFontSize = @"DTDefaultFontSize";
+NSString *DTDefaultParagraphStyle = @"DTDefaultParagraphStyle";
 
 @implementation NSAttributedString (HTML)
 
@@ -105,20 +107,14 @@ NSString *DTDefaultLinkDecoration = @"DTDefaultLinkDecoration";
     
 	// base tag with font defaults
 	DTCoreTextFontDescriptor *defaultFontDescriptor = [[[DTCoreTextFontDescriptor alloc] initWithFontAttributes:nil] autorelease];
-    defaultFontDescriptor.pointSize = 12.0 * textScale;
     
     NSString *defaultFontFamily = [options objectForKey:DTDefaultFontFamily];
-    if (defaultFontFamily)
-    {
-        defaultFontDescriptor.fontFamily = defaultFontFamily;
-    }
-    else
-    {
-        defaultFontDescriptor.fontFamily = @"Times New Roman";
-    }
+    defaultFontDescriptor.fontFamily = defaultFontFamily ? defaultFontFamily : @"Times New Roman";
     
-    id defaultLinkColor = [options objectForKey:DTDefaultLinkColor];
-    
+    NSNumber *defaultFontSize = [options objectForKey:DTDefaultFontSize];
+    defaultFontDescriptor.pointSize = defaultFontSize ? [defaultFontSize floatValue] : 12.0 * textScale;
+        
+    id defaultLinkColor = [options objectForKey:DTDefaultLinkColor];    
     if (defaultLinkColor)
     {
         if ([defaultLinkColor isKindOfClass:[NSString class]])
@@ -136,14 +132,16 @@ NSString *DTDefaultLinkDecoration = @"DTDefaultLinkDecoration";
 	BOOL defaultLinkDecoration = YES;
 	
 	NSNumber *linkDecorationDefault = [options objectForKey:DTDefaultLinkDecoration];
-	
 	if (linkDecorationDefault)
 	{
 		defaultLinkDecoration = [linkDecorationDefault boolValue];
 	}
     
     // default paragraph style
-    DTCoreTextParagraphStyle *defaultParagraphStyle = [DTCoreTextParagraphStyle defaultParagraphStyle];
+    DTCoreTextParagraphStyle *defaultParagraphStyle = [options objectForKey:DTDefaultParagraphStyle];
+    if (!defaultParagraphStyle) {
+        defaultParagraphStyle = [DTCoreTextParagraphStyle defaultParagraphStyle];
+    }
     
     DTHTMLElement *defaultTag = [[[DTHTMLElement alloc] init] autorelease];
     defaultTag.fontDescriptor = defaultFontDescriptor;
@@ -172,6 +170,9 @@ NSString *DTDefaultLinkDecoration = @"DTDefaultLinkDecoration";
 	// skip initial whitespace
 	[scanner scanCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:NULL];
  	
+    // skip xml header tag
+    [scanner scanXMLDeclaration:NULL];
+    
     // skip doctype tag
     [scanner scanDOCTYPE:NULL];
     

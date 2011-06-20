@@ -6,6 +6,8 @@
 //  Copyright 2011 Drobnik.com. All rights reserved.
 //
 
+#import <CoreText/CoreText.h>
+
 @class NSAttributedString;
 
 extern NSString *NSBaseURLDocumentOption;
@@ -17,6 +19,8 @@ extern NSString *DTDefaultFontFamily;
 extern NSString *DTDefaultTextColor;
 extern NSString *DTDefaultLinkColor;
 extern NSString *DTDefaultLinkDecoration;
+extern NSString *DTDefaultFontSize;
+extern NSString *DTDefaultParagraphStyle;
 
 CTParagraphStyleRef createDefaultParagraphStyle(void);
 CTParagraphStyleRef createParagraphStyle(CGFloat paragraphSpacingBefore, CGFloat paragraphSpacing, CGFloat headIndent, NSArray *tabStops, CTTextAlignment alignment);
