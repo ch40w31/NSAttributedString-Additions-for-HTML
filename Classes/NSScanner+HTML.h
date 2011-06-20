@@ -12,6 +12,7 @@
 
 - (NSString *)peekNextTagSkippingClosingTags:(BOOL)skipClosingTags;
 - (BOOL)scanHTMLTag:(NSString **)tagName attributes:(NSDictionary **)attributes isOpen:(BOOL *)isOpen isClosed:(BOOL *)isClosed;
+- (BOOL)scanXMLDeclaration:(NSString **)contents;
 - (BOOL)scanDOCTYPE:(NSString **)contents;
 - (BOOL)scanCSSAttribute:(NSString **)name value:(NSString **)value;
 

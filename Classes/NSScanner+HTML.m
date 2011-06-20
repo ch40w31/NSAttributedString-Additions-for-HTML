@@ -183,6 +183,37 @@
 	return YES;
 }
 
+- (BOOL)scanXMLDeclaration:(NSString **)contents
+{
+    NSInteger initialScanLocation = [self scanLocation];
+	
+	if (![self scanString:@"<?" intoString:NULL])
+	{
+		[self setScanLocation:initialScanLocation];
+		return NO;
+	}
+    
+    NSString *body = nil;
+    
+    if (![self scanUpToString:@"?>" intoString:&body])
+    {
+		[self setScanLocation:initialScanLocation];
+        return NO;
+    }
+    
+    if (![self scanString:@"?>" intoString:NULL])
+    {
+		[self setScanLocation:initialScanLocation];
+        return NO;
+    }
+    
+    if (contents)
+    {
+        *contents = body;
+    }
+    
+    return YES;
+}
 
 - (BOOL)scanDOCTYPE:(NSString **)contents
 {
