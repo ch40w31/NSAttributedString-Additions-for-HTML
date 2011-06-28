@@ -32,6 +32,7 @@ NSString *NSTextSizeMultiplierDocumentOption = @"NSTextSizeMultiplierDocumentOpt
 
 // custom options
 NSString *DTMaxImageSize = @"DTMaxImageSize";
+NSString *DTDefaultFontName = @"DTDefaultFontName";
 NSString *DTDefaultFontFamily = @"DTDefaultFontFamily";
 NSString *DTDefaultTextColor = @"DTDefaultTextColor";
 NSString *DTDefaultLinkColor = @"DTDefaultLinkColor";
@@ -108,8 +109,13 @@ NSString *DTDefaultParagraphStyle = @"DTDefaultParagraphStyle";
 	// base tag with font defaults
 	DTCoreTextFontDescriptor *defaultFontDescriptor = [[[DTCoreTextFontDescriptor alloc] initWithFontAttributes:nil] autorelease];
     
-    NSString *defaultFontFamily = [options objectForKey:DTDefaultFontFamily];
-    defaultFontDescriptor.fontFamily = defaultFontFamily ? defaultFontFamily : @"Times New Roman";
+    NSString *defaultFontName = [options objectForKey:DTDefaultFontName];
+    if (defaultFontName) {
+        defaultFontDescriptor.fontName = defaultFontName;
+    } else {
+        NSString *defaultFontFamily = [options objectForKey:DTDefaultFontFamily];
+        defaultFontDescriptor.fontFamily = defaultFontFamily ? defaultFontFamily : @"Times New Roman";
+    }
     
     NSNumber *defaultFontSize = [options objectForKey:DTDefaultFontSize];
     defaultFontDescriptor.pointSize = defaultFontSize ? [defaultFontSize floatValue] : 12.0 * textScale;
