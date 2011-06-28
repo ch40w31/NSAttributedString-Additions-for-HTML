@@ -38,7 +38,7 @@ static NSDictionary *entityLookup = nil;
 {
 	if (!metaTags)
 	{
-		metaTags = [[NSSet alloc] initWithObjects:@"html", @"head", @"meta", @"style", @"#COMMENT#", nil];
+		metaTags = [[NSSet alloc] initWithObjects:@"html", @"head", @"meta", @"style", @"#COMMENT#", @"title", nil];
 	}
 	
 	return [metaTags containsObject:[self lowercaseString]];
