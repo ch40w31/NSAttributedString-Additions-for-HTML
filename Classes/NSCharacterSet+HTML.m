@@ -17,12 +17,12 @@ static NSCharacterSet *_nonQuotedAttributeEndCharacterSet = nil;
 
 + (NSCharacterSet *)tagNameCharacterSet
 {
-    if (!_tagNameCharacterSet)
-    {
-        _tagNameCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"] retain];
-    }
-    
-    return _tagNameCharacterSet;
+	if (!_tagNameCharacterSet)
+	{
+		_tagNameCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"] retain];
+	}
+	
+	return _tagNameCharacterSet;
 }
 
 + (NSCharacterSet *)tagAttributeNameCharacterSet
@@ -37,25 +37,25 @@ static NSCharacterSet *_nonQuotedAttributeEndCharacterSet = nil;
 
 + (NSCharacterSet *)quoteCharacterSet
 {
-    if (!_quoteCharacterSet)
-    {
-        _quoteCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"'\""] retain];
-    }
-    
-    return _quoteCharacterSet;
+	if (!_quoteCharacterSet)
+	{
+		_quoteCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"'\""] retain];
+	}
+	
+	return _quoteCharacterSet;
 }
 
 + (NSCharacterSet *)nonQuotedAttributeEndCharacterSet
 {
-    if (!_nonQuotedAttributeEndCharacterSet)
-    {
-        NSMutableCharacterSet *tmpCharacterSet = [NSMutableCharacterSet characterSetWithCharactersInString:@"/>"];
-        [tmpCharacterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        
-        _nonQuotedAttributeEndCharacterSet = [tmpCharacterSet copy];
-    }
-    
-    return _nonQuotedAttributeEndCharacterSet;
+	if (!_nonQuotedAttributeEndCharacterSet)
+	{
+		NSMutableCharacterSet *tmpCharacterSet = [NSMutableCharacterSet characterSetWithCharactersInString:@"/>"];
+		[tmpCharacterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		
+		_nonQuotedAttributeEndCharacterSet = [tmpCharacterSet copy];
+	}
+	
+	return _nonQuotedAttributeEndCharacterSet;
 }
 
 

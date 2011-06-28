@@ -51,6 +51,10 @@
 		UIBarButtonItem *debug = [[[UIBarButtonItem alloc] initWithTitle:@"Debug Frames" style:UIBarButtonItemStyleBordered target:self action:@selector(debugButton:)] autorelease];
 		NSArray *toolbarItems = [NSArray arrayWithObjects:spacer, debug, nil];
 		[self setToolbarItems:toolbarItems];
+		
+		
+		// register notifications
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(lazyImageDidFinishLoading:) name:@"DTLazyImageViewDidFinishLoading" object:nil];
 	}
 	return self;
 }
@@ -58,6 +62,7 @@
 
 - (void)dealloc 
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[_fileName release];
 	[_segmentedControl release];
 	[_textView release];
@@ -68,7 +73,7 @@
 	
 	[lastActionLink release];
 	[mediaPlayers release];
-    
+	
 	[super dealloc];
 }
 
@@ -104,7 +109,7 @@
 	[self.view addSubview:_rangeView];
 	
 	// Create text view
-    [DTAttributedTextContentView setLayerClass:[CATiledLayer class]];
+	[DTAttributedTextContentView setLayerClass:[CATiledLayer class]];
 	_textView = [[DTAttributedTextView alloc] initWithFrame:frame];
 	_textView.textDelegate = self;
 	_textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -113,7 +118,7 @@
 
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+	[super viewDidLoad];
 	
 	// Load HTML data
 	NSString *readmePath = [[NSBundle mainBundle] pathForResource:_fileName ofType:nil];
@@ -121,19 +126,19 @@
 	NSData *data = [html dataUsingEncoding:NSUTF8StringEncoding];
 	
 	// Create attributed string from HTML
-    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:1.0], NSTextSizeMultiplierDocumentOption, 
-                             @"Times New Roman", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
-    
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:1.0], NSTextSizeMultiplierDocumentOption, 
+													 @"Times New Roman", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
+	
 	NSAttributedString *string = [[NSAttributedString alloc] initWithHTML:data options:options documentAttributes:NULL];
 	
 	// Display string
-    _textView.contentView.edgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+	_textView.contentView.edgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
 	_textView.attributedString = string;
-    
+	
 	// Data view
 	_dataView.text = [data description];
-    
-    [string release];
+	
+	[string release];
 }
 
 
@@ -153,33 +158,33 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-    
+	
 	// now the bar is up so we can autoresize again
 	_textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    // fill other tabs
-    // Create range view
+	
+	// fill other tabs
+	// Create range view
 	NSMutableString *dumpOutput = [[NSMutableString alloc] init];
 	NSDictionary *attributes = nil;
 	NSRange effectiveRange = NSMakeRange(0, 0);
-    
-    if ([_textView.attributedString length])
-    {
-        
-        while ((attributes = [_textView.attributedString attributesAtIndex:effectiveRange.location effectiveRange:&effectiveRange]))
-        {
-            [dumpOutput appendFormat:@"Range: (%d, %d), %@\n\n", effectiveRange.location, effectiveRange.length, attributes];
-            effectiveRange.location += effectiveRange.length;
-            
-            if (effectiveRange.location >= [_textView.attributedString length])
-            {
-                break;
-            }
-        }
-    }
+	
+	if ([_textView.attributedString length])
+	{
+		
+		while ((attributes = [_textView.attributedString attributesAtIndex:effectiveRange.location effectiveRange:&effectiveRange]))
+		{
+			[dumpOutput appendFormat:@"Range: (%d, %d), %@\n\n", effectiveRange.location, effectiveRange.length, attributes];
+			effectiveRange.location += effectiveRange.length;
+			
+			if (effectiveRange.location >= [_textView.attributedString length])
+			{
+				break;
+			}
+		}
+	}
 	_rangeView.text = dumpOutput;
 	
-    
+	
 	// Create characters view
 	[dumpOutput setString:@""];
 	NSData *dump = [[_textView.attributedString string] dataUsingEncoding:NSUTF8StringEncoding];
@@ -259,46 +264,48 @@
 		grayView.backgroundColor = [UIColor blackColor];
 		
 		MPMoviePlayerController *player =[[[MPMoviePlayerController alloc] initWithContentURL:url] autorelease];
-        
-        NSString *airplayAttr = [attachment.attributes objectForKey:@"x-webkit-airplay"];
-        if ([airplayAttr isEqualToString:@"allow"])
-        {
-            if ([player respondsToSelector:@selector(setAllowsAirPlay:)])
-            {
-                player.allowsAirPlay = YES;
-            }
-        }
-
-        NSString *controlsAttr = [attachment.attributes objectForKey:@"controls"];
-        if (controlsAttr)
-        {
-            player.controlStyle = MPMovieControlStyleEmbedded;
-        }
-        else
-        {
-            player.controlStyle = MPMovieControlStyleNone;
-        }
-
-        NSString *loopAttr = [attachment.attributes objectForKey:@"loop"];
-        if (loopAttr)
-        {
-            player.repeatMode = MPMovieRepeatModeOne;
-        }
-        else
-        {
-            player.repeatMode = MPMovieRepeatModeNone;
-        }
-        
-        NSString *autoplayAttr = [attachment.attributes objectForKey:@"autoplay"];
-        if (autoplayAttr)
-        {
-            player.shouldAutoplay = YES;
-        }
-        else
-        {
-            player.shouldAutoplay = NO;
-        }
-        
+		
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_4_2
+		NSString *airplayAttr = [attachment.attributes objectForKey:@"x-webkit-airplay"];
+		if ([airplayAttr isEqualToString:@"allow"])
+		{
+			if ([player respondsToSelector:@selector(setAllowsAirPlay:)])
+			{
+				player.allowsAirPlay = YES;
+			}
+		}
+#endif
+		
+		NSString *controlsAttr = [attachment.attributes objectForKey:@"controls"];
+		if (controlsAttr)
+		{
+			player.controlStyle = MPMovieControlStyleEmbedded;
+		}
+		else
+		{
+			player.controlStyle = MPMovieControlStyleNone;
+		}
+		
+		NSString *loopAttr = [attachment.attributes objectForKey:@"loop"];
+		if (loopAttr)
+		{
+			player.repeatMode = MPMovieRepeatModeOne;
+		}
+		else
+		{
+			player.repeatMode = MPMovieRepeatModeNone;
+		}
+		
+		NSString *autoplayAttr = [attachment.attributes objectForKey:@"autoplay"];
+		if (autoplayAttr)
+		{
+			player.shouldAutoplay = YES;
+		}
+		else
+		{
+			player.shouldAutoplay = NO;
+		}
+		
 		[player prepareToPlay];
 		[self.mediaPlayers addObject:player];
 		
@@ -316,7 +323,7 @@
 		{
 			imageView.image = attachment.contents;
 		}
-
+		
 		// url for deferred loading
 		imageView.url = attachment.contentURL;
 		
@@ -361,8 +368,33 @@
 - (void)debugButton:(UIBarButtonItem *)sender
 {
 	_textView.contentView.drawDebugFrames = !_textView.contentView.drawDebugFrames;
-    [DTCoreTextLayoutFrame setShouldDrawDebugFrames:_textView.contentView.drawDebugFrames];
-    [self.view setNeedsDisplay];
+	[DTCoreTextLayoutFrame setShouldDrawDebugFrames:_textView.contentView.drawDebugFrames];
+	[self.view setNeedsDisplay];
+}
+
+#pragma mark Notifications
+- (void)lazyImageDidFinishLoading:(NSNotification *)notification
+{
+	NSDictionary *userInfo = [notification userInfo];
+	NSURL *url = [userInfo objectForKey:@"ImageURL"];
+	CGSize imageSize = [[userInfo objectForKey:@"ImageSize"] CGSizeValue];
+	
+	NSPredicate *pred = [NSPredicate predicateWithFormat:@"contentURL == %@", url];
+	
+	// update all attachments that matchin this URL (possibly multiple images with same size)
+	for (DTTextAttachment *oneAttachment in [_textView.contentView.layoutFrame textAttachmentsWithPredicate:pred])
+	{
+		oneAttachment.originalSize = imageSize;
+		
+		if (!CGSizeEqualToSize(imageSize, oneAttachment.displaySize))
+		{
+			oneAttachment.displaySize = imageSize;
+		}
+	}
+	
+	// redo layout
+	// here we're layouting the entire string, might be more efficient to only relayout the paragraphs that contain these attachments
+	[_textView.contentView relayoutText];
 }
 
 #pragma mark Properties
