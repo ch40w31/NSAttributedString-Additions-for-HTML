@@ -148,6 +148,7 @@
 		AA1CD3BE13AB98F7002E5C9E /* DTAttributedTextContentView.h in Headers */ = {isa = PBXBuildFile; fileRef = A73BC48C12DA078100F064C6 /* DTAttributedTextContentView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AA1CD3BF13AB98F7002E5C9E /* DTLinkButton.h in Headers */ = {isa = PBXBuildFile; fileRef = A78A38D212E2FEAC007CE622 /* DTLinkButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AA1CD3C013AB98F7002E5C9E /* CGUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = A78A38F612E30153007CE622 /* CGUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AAB9F7E813B0E1A1003C5F22 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		B23558F312E04C57005EA62F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B23558E212E04C3C005EA62F /* main.m */; };
 		B23558F712E04C8E005EA62F /* README.html in Resources */ = {isa = PBXBuildFile; fileRef = B23558E712E04C3C005EA62F /* README.html */; };
 		B235592712E05065005EA62F /* DemoSnippetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B235590212E04D1F005EA62F /* DemoSnippetsViewController.m */; };
@@ -284,6 +285,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAB9F7E813B0E1A1003C5F22 /* UIKit.framework in Frameworks */,
 				AA1CD38D13AB984C002E5C9E /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -963,6 +965,7 @@
 				AA1CD39213AB984C002E5C9E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "CoreTextExtensions" */ = {
 			isa = XCConfigurationList;
