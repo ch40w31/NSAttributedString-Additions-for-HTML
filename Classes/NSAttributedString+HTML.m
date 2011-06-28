@@ -202,6 +202,9 @@ NSString *DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
     // skip xml header tag
     [scanner scanXMLDeclaration:NULL];
     
+	// skip whitespace
+	[scanner scanCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:NULL];
+ 	
     // skip doctype tag
     [scanner scanDOCTYPE:NULL];
     
@@ -218,11 +221,6 @@ NSString *DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
 		if ([scanner scanHTMLTag:&tagName attributes:&tagAttributesDict isOpen:&tagOpen isClosed:&immediatelyClosed] && tagName)
 		{
 			
-			if ([tagName isMetaTag])
-			{
-				continue;
-			}
-			
 			if (tagOpen)
 			{
 				// make new tag as copy of previous tag
@@ -231,6 +229,11 @@ NSString *DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
 				currentTag.tagName = tagName;
 				currentTag.textScale = textScale;
 				[parent addChild:currentTag];
+				
+				if ([tagName isMetaTag])
+				{
+					continue;
+				}
 				
 				// convert CSS Styles into our own style
 				NSString *styleString = [tagAttributesDict objectForKey:@"style"];
@@ -826,7 +829,9 @@ NSString *DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
 			{
 				if (tagOpen)
 				{
-					currentTag.paragraphStyle.paragraphSpacing = defaultFontDescriptor.pointSize;
+#warning add setting
+					currentTag.paragraphStyle.paragraphSpacing = 0;//defaultFontDescriptor.pointSize;
+					currentTag.paragraphStyle.firstLineIndent = 37;
 				}
 				
 			}
