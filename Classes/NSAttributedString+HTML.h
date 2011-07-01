@@ -20,6 +20,8 @@ extern NSString *DTDefaultFontFamily;
 extern NSString *DTDefaultTextColor;
 extern NSString *DTDefaultLinkColor;
 extern NSString *DTDefaultLinkDecoration;
+extern NSString *DTDefaultFontSize;
+extern NSString *DTDefaultParagraphStyle;
 extern NSString *DTDefaultTextAlignment;
 extern NSString *DTDefaultLineHeightMultiplier;
 
