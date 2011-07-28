@@ -829,9 +829,11 @@ NSString *DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
 			{
 				if (tagOpen)
 				{
-#warning add setting
-					currentTag.paragraphStyle.paragraphSpacing = 0;//defaultFontDescriptor.pointSize;
-					currentTag.paragraphStyle.firstLineIndent = 37;
+#warning add setting!
+//					currentTag.paragraphStyle.paragraphSpacing = 0;//defaultFontDescriptor.pointSize;
+//					currentTag.paragraphStyle.firstLineIndent = 37;
+
+					currentTag.paragraphStyle.paragraphSpacing = defaultFontDescriptor.pointSize;
 				}
 				
 			}
