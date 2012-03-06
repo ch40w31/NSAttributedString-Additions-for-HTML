@@ -9,5 +9,6 @@
 #import <Foundation/NSString.h>
 
 @interface NSString (MalformedUTF8Additions)
++ (id)stringWithPotentiallyMalformedUTF8Data:(NSData *)data;
 - (id)initWithPotentiallyMalformedUTF8Data:(NSData *)data;
 @end

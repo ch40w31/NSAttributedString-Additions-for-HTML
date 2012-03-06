@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <ImageIO/ImageIO.h>
+#import <UIKit/UIKit.h>
 
 
 @interface DTLazyImageView : UIImageView 

@@ -130,6 +130,10 @@ static __inline__ __attribute__((always_inline)) ConversionResult ConvertSingleC
 
 @implementation NSString (MalformedUTF8Additions)
 
++ (id)stringWithPotentiallyMalformedUTF8Data:(NSData *)data
+{
+	return [[[self alloc] initWithPotentiallyMalformedUTF8Data:data] autorelease];
+}
 - (id)initWithPotentiallyMalformedUTF8Data:(NSData *)data
 {
   NSString *returnString = NULL;
