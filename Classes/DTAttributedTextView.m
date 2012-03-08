@@ -193,9 +193,9 @@
 	}
 }
 
-- (void)setTextDelegate:(id<DTAttributedTextContentViewDelegate>)textDelegate
+- (void)setTextDelegate:(id<DTAttributedTextContentViewDelegate>)inTextDelegate
 {
-	self.contentView.delegate = textDelegate;
+	self.contentView.delegate = inTextDelegate;
 }
 
 - (id<DTAttributedTextContentViewDelegate>)textDelegate
