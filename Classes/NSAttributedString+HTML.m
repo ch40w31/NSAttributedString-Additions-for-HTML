@@ -9,6 +9,8 @@
 #import <CoreText/CoreText.h>
 #import <UIKit/UIKit.h>
 
+#import <objc/runtime.h>
+
 #import "NSAttributedString+HTML.h"
 #import "NSMutableAttributedString+HTML.h"
 
@@ -43,6 +45,9 @@ NSString *DTDefaultFontSize = @"DTDefaultFontSize";
 NSString *DTDefaultParagraphStyle = @"DTDefaultParagraphStyle";
 NSString *DTDefaultTextAlignment = @"DTDefaultTextAlignment";
 NSString *DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
+
+
+static char * const kNSATTRSTR_TAG_HANDLERS = "kNSATTRSTR_TAG_HANDLERS";
 
 
 @interface NSAttributedString ()
@@ -285,7 +290,7 @@ NSString *DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
 			
 			NSAttributedStringTagHandler handler = nil;
 			if ((handler = [self.tagHandlers objectForKey:tagName])) {
-				handler(currentTag, tagOpenBOOL tagOpen);
+				handler(currentTag, tagOpen);
 			} else if ([tagName isEqualToString:@"#COMMENT#"])
 			{
 				continue;
@@ -1060,6 +1065,15 @@ NSString *DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
 }
 
 #pragma mark - Tag Handler
+
+- (NSMutableDictionary*) tagHandlers
+{
+	return objc_getAssociatedObject(self, kNSATTRSTR_TAG_HANDLERS);
+}
+- (void) setTagHandlers:(NSMutableDictionary *)tagHandlers
+{
+	objc_setAssociatedObject(self, kNSATTRSTR_TAG_HANDLERS, tagHandlers, OBJC_ASSOCIATION_RETAIN);
+}
 
 - (void) setTagHandler:(NSAttributedStringTagHandler)handler forTagName:(NSString*)tag;
 {
