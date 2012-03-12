@@ -44,6 +44,14 @@ NSString *DTDefaultParagraphStyle = @"DTDefaultParagraphStyle";
 NSString *DTDefaultTextAlignment = @"DTDefaultTextAlignment";
 NSString *DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
 
+
+@interface NSAttributedString ()
+
+@property (nonatomic, retain) NSMutableDictionary *tagHandlers;
+
+@end
+
+
 @implementation NSAttributedString (HTML)
 
 - (id)initWithHTML:(NSData *)data documentAttributes:(NSDictionary **)dict
@@ -172,6 +180,10 @@ NSString *DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
 		defaultParagraphStyle.textAlignment = [defaultTextAlignmentNum integerValue];
 	}
 	
+	
+	self.tagHandlers = [[NSMutableDictionary alloc] init];
+	[self setupDefaultTagHandlers];
+	
     
     DTHTMLElement *defaultTag = [[[DTHTMLElement alloc] init] autorelease];
     defaultTag.fontDescriptor = defaultFontDescriptor;
@@ -271,7 +283,10 @@ NSString *DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
 			
 			// ---------- Processing
 			
-			if ([tagName isEqualToString:@"#COMMENT#"])
+			NSAttributedStringTagHandler handler = nil;
+			if ((handler = [self.tagHandlers objectForKey:tagName])) {
+				handler(currentTag, tagOpenBOOL tagOpen);
+			} else if ([tagName isEqualToString:@"#COMMENT#"])
 			{
 				continue;
 			}
@@ -1042,6 +1057,23 @@ NSString *DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
 	[smallAttributes release];
 	
 	return 	[tmpString autorelease];
+}
+
+#pragma mark - Tag Handler
+
+- (void) setTagHandler:(NSAttributedStringTagHandler)handler forTagName:(NSString*)tag;
+{
+	[self.tagHandlers setObject:[handler copy] forKey:tag];
+}
+
+- (void) setupDefaultTagHandlers
+{
+	[self setTagHandler:^(DTHTMLElement *currentTag, BOOL tagOpen) {
+		if (tagOpen)
+		{
+			currentTag.underlineStyle = kCTUnderlineStyleSingle;
+		}
+	} forTagName:@"u"];
 }
 
 @end

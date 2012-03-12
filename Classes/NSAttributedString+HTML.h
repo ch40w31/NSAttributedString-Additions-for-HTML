@@ -8,7 +8,12 @@
 
 #import <CoreText/CoreText.h>
 
+@class DTHTMLElement;
 @class NSAttributedString;
+
+
+typedef void(^NSAttributedStringTagHandler)(DTHTMLElement *currentTag, BOOL tagOpen);
+
 
 extern NSString *NSBaseURLDocumentOption;
 extern NSString *NSTextEncodingNameDocumentOption;
@@ -29,7 +34,9 @@ CTParagraphStyleRef createDefaultParagraphStyle(void);
 CTParagraphStyleRef createParagraphStyle(CGFloat paragraphSpacingBefore, CGFloat paragraphSpacing, CGFloat headIndent, NSArray *tabStops, CTTextAlignment alignment);
 
 
-@interface NSAttributedString (HTML)
+@interface NSAttributedString (HTML) 
+
+@property (nonatomic,readonly) NSDictionary *tagHandlers;
 
 - (id)initWithHTML:(NSData *)data documentAttributes:(NSDictionary **)dict;
 - (id)initWithHTML:(NSData *)data baseURL:(NSURL *)base documentAttributes:(NSDictionary **)dict;
@@ -38,8 +45,9 @@ CTParagraphStyleRef createParagraphStyle(CGFloat paragraphSpacingBefore, CGFloat
 // convenience methods
 + (NSAttributedString *)attributedStringWithHTML:(NSData *)data options:(NSDictionary *)options;
 
-
 // utilities
 + (NSAttributedString *)synthesizedSmallCapsAttributedStringWithText:(NSString *)text attributes:(NSDictionary *)attributes;
+
+- (void) setTagHandler:(NSAttributedStringTagHandler)handler forTagName:(NSString*)tag;
 
 @end
