@@ -252,7 +252,15 @@ extern unsigned int default_css_len;
 
 - (void)mergeStylesheet:(DTCSSStylesheet *)stylesheet
 {
-	[_styles addEntriesFromDictionary:[stylesheet styles]];
+	[[stylesheet styles] enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+		NSMutableDictionary *style = [[_styles objectForKey:key] mutableCopy];
+		if (!style) {
+			[_styles setObject:obj forKey:key];
+		} else {
+			[style addEntriesFromDictionary:obj];
+			[_styles setObject:style forKey:key];
+		}
+	}];
 }
 
 #pragma mark Accessing Style Information
