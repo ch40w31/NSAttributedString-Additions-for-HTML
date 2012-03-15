@@ -319,6 +319,8 @@
 		A7F5673E14D8744600D1F167 /* DTColor+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = A788C95314863E8700E1AFD9 /* DTColor+HTML.m */; };
 		A7F5673F14D8744600D1F167 /* DTImage+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C5D01414D7E3BB00AF1D75 /* DTImage+HTML.m */; };
 		A7F5674014D8755300D1F167 /* NSData+DTBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = A788C94314863E8700E1AFD9 /* NSData+DTBase64.m */; };
+		AAD111D11511E53600A79F12 /* DTHTMLAttributedStringBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = A7949A4514CAF58C00A8CCDE /* DTHTMLAttributedStringBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AAD111D31511E54F00A79F12 /* DTHTMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = A7949A4814CAF5A300A8CCDE /* DTHTMLParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE08BAB5148808B20054DC84 /* DTCoreTextFontOverrides.plist in Resources */ = {isa = PBXBuildFile; fileRef = A788CA2114863EF100E1AFD9 /* DTCoreTextFontOverrides.plist */; };
 /* End PBXBuildFile section */
 
@@ -1010,6 +1012,8 @@
 				A70B4CA01486558200873A4A /* DTCoreText.h in Headers */,
 				A760F54014F56E8E00AD1B0E /* DTImage+HTML.h in Headers */,
 				A7081EA415036460002987F1 /* DTTextBlock.h in Headers */,
+				AAD111D31511E54F00A79F12 /* DTHTMLParser.h in Headers */,
+				AAD111D11511E53600A79F12 /* DTHTMLAttributedStringBuilder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

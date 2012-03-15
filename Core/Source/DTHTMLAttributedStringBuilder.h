@@ -9,8 +9,12 @@
 #import "DTHTMLParser.h"
 
 @class DTHTMLElement;
+@class DTHTMLAttributedStringBuilder;
 
 typedef void(^DTHTMLAttributedStringBuilderWillFlushCallback)(DTHTMLElement *);
+
+typedef void(^DTHTMLAttributedStringBuilderTagHandler)(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *currentTag);
+
 
 @interface DTHTMLAttributedStringBuilder : NSObject <DTHTMLParserDelegate>
 
@@ -23,5 +27,8 @@ typedef void(^DTHTMLAttributedStringBuilderWillFlushCallback)(DTHTMLElement *);
 
 // this block is called before the element is written to the output attributed string
 @property (nonatomic, copy) DTHTMLAttributedStringBuilderWillFlushCallback willFlushCallback;
+
+@property (nonatomic, readonly, retain) NSURL *baseURL;
+@property (nonatomic, readonly, retain) DTCSSStylesheet *globalStyleSheet;
 
 @end

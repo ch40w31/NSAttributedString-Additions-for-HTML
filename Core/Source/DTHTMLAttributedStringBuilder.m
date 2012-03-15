@@ -100,6 +100,15 @@
 	[self _registerTagStartHandlers];
 	[self _registerTagEndHandlers];
 	
+	
+	if ([_options objectForKey:DTTagStartHandlers]) {
+		[_tagStartHandlers addEntriesFromDictionary:[_options objectForKey:DTTagStartHandlers]];
+	}
+	if ([_options objectForKey:DTTagEndHandlers]) {
+		[_tagEndHandlers addEntriesFromDictionary:[_options objectForKey:DTTagEndHandlers]];
+	}
+	
+	
  	// Specify the appropriate text encoding for the passed data, default is UTF8 
 	NSString *textEncodingName = [_options objectForKey:NSTextEncodingNameDocumentOption];
 	NSStringEncoding encoding = NSUTF8StringEncoding; // default
@@ -274,7 +283,7 @@
 	
 	_tagStartHandlers = [[NSMutableDictionary alloc] init];
 	
-	void (^imgBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler imgBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		// float causes the image to be its own block
 		if (currentTag.floatStyle != DTHTMLElementFloatStyleNone)
@@ -330,7 +339,7 @@
 	[_tagStartHandlers setObject:[imgBlock copy] forKey:@"img"];
 	
 	
-	void (^blockquoteBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler blockquoteBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		currentTag.paragraphStyle.headIndent += 25.0 * textScale;
 		currentTag.paragraphStyle.firstLineHeadIndent = currentTag.paragraphStyle.headIndent;
@@ -340,7 +349,7 @@
 	[_tagStartHandlers setObject:[blockquoteBlock copy] forKey:@"blockquote"];
 	
 	
-	void (^objectBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler objectBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		// hide contents of recognized tag
 		currentTag.tagContentInvisible = YES;
@@ -388,7 +397,7 @@
 	[_tagStartHandlers setObject:[objectBlock copy] forKey:@"iframe"];
 	
 	
-	void (^aBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler aBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		if (currentTag.isColorInherited || !currentTag.textColor)
 		{
@@ -429,7 +438,7 @@
 	[_tagStartHandlers setObject:[aBlock copy] forKey:@"a"];
 	
 	
-	void (^liBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler liBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		needsListItemStart = YES;
 		currentTag.paragraphStyle.paragraphSpacing = 0;
@@ -447,7 +456,7 @@
 	[_tagStartHandlers setObject:[liBlock copy] forKey:@"li"];
 	
 
-	void (^listBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler listBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 #if TARGET_OS_IPHONE		
 		if (needsListItemStart)
@@ -527,7 +536,7 @@
 	
 	
 	
-	void (^hrBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler hrBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		// open block needs closing
 		if (needsNewLineBefore)
@@ -559,49 +568,49 @@
 	[_tagStartHandlers setObject:[hrBlock copy] forKey:@"hr"];
 	
 	
-	void (^h1Block)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler h1Block = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		currentTag.headerLevel = 1;
 	};
 	[_tagStartHandlers setObject:[h1Block copy] forKey:@"h1"];
 	
 	
-	void (^h2Block)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler h2Block = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		currentTag.headerLevel = 2;
 	};
 	[_tagStartHandlers setObject:[h2Block copy] forKey:@"h2"];
 	
 	
-	void (^h3Block)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler h3Block = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		currentTag.headerLevel = 3;
 	};
 	[_tagStartHandlers setObject:[h3Block copy] forKey:@"h3"];
 	
 	
-	void (^h4Block)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler h4Block = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		currentTag.headerLevel = 4;
 	};
 	[_tagStartHandlers setObject:[h4Block copy] forKey:@"h4"];
 	
 	
-	void (^h5Block)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler h5Block = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		currentTag.headerLevel = 5;
 	};
 	[_tagStartHandlers setObject:[h5Block copy] forKey:@"h5"];
 	
 	
-	void (^h6Block)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler h6Block = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		currentTag.headerLevel = 6;
 	};
 	[_tagStartHandlers setObject:[h6Block copy] forKey:@"h6"];
 	
 	
-	void (^fontBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler fontBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		NSInteger size = [[currentTag attributeForKey:@"size"] intValue];
 		
@@ -652,7 +661,7 @@
 	[_tagStartHandlers setObject:[fontBlock copy] forKey:@"font"];
 	
 	
-	void (^pBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler pBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		currentTag.paragraphStyle.firstLineHeadIndent = currentTag.paragraphStyle.headIndent + defaultParagraphStyle.firstLineHeadIndent;
 	};
@@ -660,7 +669,7 @@
 	[_tagStartHandlers setObject:[pBlock copy] forKey:@"p"];
 	
 	
-	void (^brBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler brBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		currentTag.text = UNICODE_LINE_FEED;
 		
@@ -682,7 +691,7 @@
 
 	_tagEndHandlers = [[NSMutableDictionary alloc] init];
 	
-	void (^bodyBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler bodyBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		// if the last child was a block we need an extra \n
 		if (needsNewLineBefore)
@@ -700,7 +709,7 @@
 	[_tagEndHandlers setObject:[bodyBlock copy] forKey:@"body"];
 	
 	
-	void (^liBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler liBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		needsListItemStart = NO;
 	};
@@ -708,7 +717,7 @@
 	[_tagEndHandlers setObject:[liBlock copy] forKey:@"li"];
 	
 	
-	void (^ulBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler ulBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		// pop the current list style from the paragraph style text lists
 		NSMutableArray *textLists = [currentTag.paragraphStyle.textLists mutableCopy];
@@ -752,7 +761,7 @@
 	[_tagEndHandlers setObject:[ulBlock copy] forKey:@"ul"];
 	[_tagEndHandlers setObject:[ulBlock copy] forKey:@"ol"];
 	
-	void (^pBlock)(void) = ^ 
+	DTHTMLAttributedStringBuilderTagHandler pBlock = ^(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *inCurrentTag) 
 	{
 		if (currentTagIsEmpty)
 		{
@@ -968,11 +977,11 @@
 		// switch to new tag
 		currentTag = nextTag;
 		
-		if (currentTag.displayStyle == DTHTMLElementDisplayStyleNone)
+/*		if (currentTag.displayStyle == DTHTMLElementDisplayStyleNone)
 		{
 			// we don't care about the other stuff in META tags, but styles are inherited
 			return;
-		}
+		}*/
 		
 		if (currentTag.displayStyle == DTHTMLElementDisplayStyleBlock || currentTag.displayStyle == DTHTMLElementDisplayStyleListItem)
 		{
@@ -999,11 +1008,11 @@
 		}
 		
 		// find block to execute for this tag if any
-		void (^tagBlock)(void) = [_tagStartHandlers objectForKey:elementName];
+		DTHTMLAttributedStringBuilderTagHandler tagBlock = [_tagStartHandlers objectForKey:elementName];
 		
 		if (tagBlock)
 		{
-			tagBlock();
+			tagBlock(self, currentTag);
 		}
 	};
 	
@@ -1026,11 +1035,11 @@
 		}
 		
 		// find block to execute for this tag if any
-		void (^tagBlock)(void) = [_tagEndHandlers objectForKey:elementName];
+		DTHTMLAttributedStringBuilderTagHandler tagBlock = [_tagEndHandlers objectForKey:elementName];
 		
 		if (tagBlock)
 		{
-			tagBlock();
+			tagBlock(self, currentTag);
 		}
 		
 		if (currentTag.displayStyle == DTHTMLElementDisplayStyleBlock)
@@ -1075,5 +1084,7 @@
 #pragma mark Properties
 
 @synthesize willFlushCallback = _willFlushCallback;
+@synthesize baseURL;
+@synthesize globalStyleSheet = _globalStyleSheet;
 
 @end

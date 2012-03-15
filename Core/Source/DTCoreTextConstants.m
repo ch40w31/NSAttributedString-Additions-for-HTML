@@ -22,6 +22,9 @@ NSString *DTDefaultListIndent = @"DTDefaultListIndent";
 
 NSString *DTDefaultStyleSheet = @"DTDefaultStyleSheet";
 
+NSString *DTTagStartHandlers = @"DTTagStartHandlers";
+NSString *DTTagEndHandlers = @"DTTagEndHandlers";
+
 // attributed string attribute constants
 
 NSString *DTTextListsAttribute = @"DTTextLists";

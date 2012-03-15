@@ -25,6 +25,10 @@ extern NSString *DTDefaultHeadIndent;
 extern NSString *DTDefaultListIndent;
 extern NSString *DTDefaultStyleSheet;
 
+extern NSString *DTTagStartHandlers;
+extern NSString *DTTagEndHandlers;
+
+
 // attributed string attribute constants
 
 extern NSString *DTTextListsAttribute;
