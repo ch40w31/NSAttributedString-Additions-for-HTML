@@ -25,6 +25,8 @@ NSString *DTDefaultStyleSheet = @"DTDefaultStyleSheet";
 NSString *DTTagStartHandlers = @"DTTagStartHandlers";
 NSString *DTTagEndHandlers = @"DTTagEndHandlers";
 
+NSString *DTFilterElementsCallback = @"DTFilterElementsCallback";
+
 // attributed string attribute constants
 
 NSString *DTTextListsAttribute = @"DTTextLists";

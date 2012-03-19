@@ -14,6 +14,7 @@
 typedef void(^DTHTMLAttributedStringBuilderWillFlushCallback)(DTHTMLElement *);
 
 typedef void(^DTHTMLAttributedStringBuilderTagHandler)(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *currentTag);
+typedef BOOL(^DTHTMLAttributedStringBuilderShouldFilterElementCallback)(DTHTMLAttributedStringBuilder *stringBuilder, DTHTMLElement *currentTag);
 
 
 @interface DTHTMLAttributedStringBuilder : NSObject <DTHTMLParserDelegate>

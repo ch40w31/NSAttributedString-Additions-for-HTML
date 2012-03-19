@@ -58,6 +58,10 @@
 	NSMutableDictionary *_tagEndHandlers;
 	
 	DTHTMLAttributedStringBuilderWillFlushCallback _willFlushCallback;
+	
+	// support for ignoring parts of the HTML tree. As long as _ignoreTagLevel is > 0 tags will be ignored
+	DTHTMLAttributedStringBuilderShouldFilterElementCallback _shouldFilterElementCallback;
+	NSUInteger _ignoreTagLevel;
 }
 
 - (id)initWithHTML:(NSData *)data options:(NSDictionary *)options documentAttributes:(NSDictionary **)dict
@@ -107,6 +111,9 @@
 	if ([_options objectForKey:DTTagEndHandlers]) {
 		[_tagEndHandlers addEntriesFromDictionary:[_options objectForKey:DTTagEndHandlers]];
 	}
+	
+	
+	_shouldFilterElementCallback = [[_options objectForKey:DTFilterElementsCallback] copy];
 	
 	
  	// Specify the appropriate text encoding for the passed data, default is UTF8 
@@ -938,6 +945,17 @@
 		nextTag.textScale = textScale;
 		nextTag.attributes = attributeDict;
 		[parent addChild:nextTag];
+
+		
+		// filter all tags below certain tags (_ignoreTagLevel > 0) or that are identified by filter callback
+		if (_ignoreTagLevel > 0) {
+			_ignoreTagLevel++;
+			return;
+		} else if (_shouldFilterElementCallback && _shouldFilterElementCallback(self, nextTag)) {
+			_ignoreTagLevel = 1;
+			return;
+		}
+		
 		
 		// apply style from merged style sheet
 		NSDictionary *mergedStyles = [_globalStyleSheet mergedStyleDictionaryForElement:nextTag];
@@ -1023,6 +1041,12 @@
 {
 	void (^tmpBlock)(void) = ^
 	{
+		// filter all tags below certain tags (_ignoreTagLevel > 0) and reduce tag level
+		if (_ignoreTagLevel > 0) {
+			_ignoreTagLevel--;
+			return;
+		}
+		
 		if (_currentTagContents)
 		{
 			// trim off white space at end if block
@@ -1066,6 +1090,11 @@
 - (void)parser:(DTHTMLParser *)parser foundCharacters:(NSString *)string
 {
 	dispatch_group_async(_stringAssemblyGroup, _stringAssemblyQueue,^{
+		// filter all tags and content below certain tags (_ignoreTagLevel > 0)
+		if (_ignoreTagLevel > 0) {
+			return;
+		}
+
 		[self _handleTagContent:string];	
 	});
 }
@@ -1073,6 +1102,11 @@
 - (void)parser:(DTHTMLParser *)parser foundCDATA:(NSData *)CDATABlock
 {
 	dispatch_group_async(_stringAssemblyGroup, _stringAssemblyQueue,^{
+		// filter all tags and content below certain tags (_ignoreTagLevel > 0)
+		if (_ignoreTagLevel > 0) {
+			return;
+		}
+		
 		if ([currentTag.tagName isEqualToString:@"style"])
 		{
 			NSString *styleBlock = [[NSString alloc] initWithData:CDATABlock encoding:NSUTF8StringEncoding];

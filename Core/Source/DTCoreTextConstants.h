@@ -28,6 +28,8 @@ extern NSString *DTDefaultStyleSheet;
 extern NSString *DTTagStartHandlers;
 extern NSString *DTTagEndHandlers;
 
+extern NSString *DTFilterElementsCallback;
+
 
 // attributed string attribute constants
 
