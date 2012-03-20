@@ -189,6 +189,38 @@
 	return attachment;
 }
 
+#pragma mark - NSCoding
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+	self = [super init];
+	if (!self) return nil;
+	
+	self.contentType  = [decoder decodeIntForKey:@"contentType"];
+	self.originalSize = [decoder decodeCGSizeForKey:@"originalSize"];
+	self.displaySize  = [decoder decodeCGSizeForKey:@"displaySize"];
+	//	@property (nonatomic, strong) id contents;
+	self.contentURL   = [decoder decodeObjectForKey:@"contentURL"];
+	self.hyperLinkURL = [decoder decodeObjectForKey:@"hyperLinkURL"];
+	self.attributes   = [decoder decodeObjectForKey:@"attributes"];
+	self.verticalAlignment = [decoder decodeIntForKey:@"verticalAlignment"];
+	
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+	[encoder encodeInt:self.contentType forKey:@"contentType"];
+	[encoder encodeCGSize:self.originalSize forKey:@"originalSize"];
+	[encoder encodeCGSize:self.displaySize	forKey:@"displaySize"];
+	//	@property (nonatomic, strong) id contents;
+	[encoder encodeObject:self.contentURL forKey:@"contentURL"];
+	[encoder encodeObject:self.hyperLinkURL forKey:@"hyperLinkURL"];
+	[encoder encodeObject:self.attributes forKey:@"attributes"];
+	[encoder encodeInt:self.verticalAlignment forKey:@"verticalAlignment"];
+}
+
+#pragma mark -
 
 // makes a data URL of the image
 - (NSString *)dataURLRepresentation

@@ -32,7 +32,7 @@ typedef enum
 /** 
  An object to represent an attachment in an HTML/rich text view.  
  */
-@interface DTTextAttachment : NSObject 
+@interface DTTextAttachment : NSObject <NSCoding>
 
 @property (nonatomic, assign) CGSize originalSize;
 @property (nonatomic, assign) CGSize displaySize;
