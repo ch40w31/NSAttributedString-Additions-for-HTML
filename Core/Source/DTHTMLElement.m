@@ -210,6 +210,10 @@
 	{
 		[tmpDict setObject:paragraphStyle.textBlocks forKey:DTTextBlocksAttribute];
 	}
+	
+	[tmpDict setObject:[NSNumber numberWithInt:self.startPositionInFile] forKey:DTHTMLStartPositionAttribute];
+	[tmpDict setObject:[NSNumber numberWithInt:self.endPositionInFile] forKey:DTHTMLEndPositionAttribute];
+	
 	return tmpDict;
 }
 
@@ -1005,6 +1009,9 @@
 @synthesize fontCache = _fontCache;
 @synthesize children = _children;
 @synthesize attributes = _attributes;
+
+@synthesize startPositionInFile = _startPositionInFile;
+@synthesize endPositionInFile = _endPositionInFile;
 
 @end
 

@@ -62,6 +62,9 @@ typedef enum
 @property (nonatomic, assign) CGSize size;
 @property (nonatomic, strong) NSDictionary *attributes;
 
+@property (nonatomic, assign) int startPositionInFile;
+@property (nonatomic, assign) int endPositionInFile;
+
 - (NSAttributedString *)attributedString;
 - (NSDictionary *)attributesDictionary;
 
