@@ -21,6 +21,8 @@
 - (void)_flushCurrentTagContent:(NSString *)tagContent;
 - (void)_flushListPrefix;
 
+@property (nonatomic, readwrite, retain) DTHTMLParser *parser;
+
 @end
 
 
@@ -257,11 +259,11 @@
 	currentTag = defaultTag; // our defaults are the root
 	
 	// create a parser
-	DTHTMLParser *parser = [[DTHTMLParser alloc] initWithData:_data encoding:encoding];
-	parser.delegate = (id)self;
+	self.parser = [[DTHTMLParser alloc] initWithData:_data encoding:encoding];
+	self.parser.delegate = (id)self;
 	
 	__block BOOL result;
-	dispatch_group_async(_stringParsingGroup, _stringParsingQueue, ^{ result = [parser parse]; });
+	dispatch_group_async(_stringParsingGroup, _stringParsingQueue, ^{ result = [self.parser parse]; });
 	
 	// wait until all string assembly is complete
 	dispatch_group_wait(_stringParsingGroup, DISPATCH_TIME_FOREVER);
@@ -937,6 +939,8 @@
 
 - (void)parser:(DTHTMLParser *)parser didStartElement:(NSString *)elementName attributes:(NSDictionary *)attributeDict
 {
+	int position = [parser numberOfChars];
+	
 	void (^tmpBlock)(void) = ^
 	{
 		DTHTMLElement *parent = currentTag;
@@ -944,6 +948,7 @@
 		nextTag.tagName = elementName;
 		nextTag.textScale = textScale;
 		nextTag.attributes = attributeDict;
+		nextTag.startPositionInFile = position
 		[parent addChild:nextTag];
 
 		
@@ -1039,8 +1044,12 @@
 
 - (void)parser:(DTHTMLParser *)parser didEndElement:(NSString *)elementName
 {
+	int position = [parser numberOfChars];
+	
 	void (^tmpBlock)(void) = ^
 	{
+		currentTag.endPositionInFile = position;
+		
 		// filter all tags below certain tags (_ignoreTagLevel > 0) and reduce tag level
 		if (_ignoreTagLevel > 0) {
 			_ignoreTagLevel--;
@@ -1120,5 +1129,6 @@
 @synthesize willFlushCallback = _willFlushCallback;
 @synthesize baseURL;
 @synthesize globalStyleSheet = _globalStyleSheet;
+@synthesize parser = _parser;
 
 @end
