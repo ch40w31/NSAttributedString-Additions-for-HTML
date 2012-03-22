@@ -388,6 +388,11 @@ void _cdataBlock(void *context, const xmlChar *value, int len)
 	return [NSString stringWithUTF8String:publicID];
 }
 
+- (NSInteger) numberOfChars
+{
+	return _parserContext->nbChars;
+}
+
 
 @synthesize parserError = _parserError;
 

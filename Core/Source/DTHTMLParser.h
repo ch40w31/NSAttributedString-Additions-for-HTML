@@ -177,4 +177,6 @@
  */
 @property (nonatomic, readonly) NSString *systemID;
 
+@property (nonatomic, readonly) NSInteger numberOfChars;
+
 @end
