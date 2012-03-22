@@ -41,3 +41,7 @@ NSString *DTShadowsAttribute = @"DTShadows";
 NSString *DTHorizontalRuleStyleAttribute = @"DTHorizontalRuleStyle";
 NSString *DTTextBlocksAttribute = @"DTTextBlocks";
 NSString *DTFieldAttribute = @"DTField";
+
+
+NSString *DTHTMLStartPositionAttribute = @"DTHTMLStartPositionAttribute";
+NSString *DTHTMLEndPositionAttribute   = @"DTHTMLEndPositionAttribute";
