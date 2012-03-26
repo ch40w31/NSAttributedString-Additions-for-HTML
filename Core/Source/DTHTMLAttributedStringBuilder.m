@@ -948,7 +948,7 @@
 		nextTag.tagName = elementName;
 		nextTag.textScale = textScale;
 		nextTag.attributes = attributeDict;
-		nextTag.startPositionInFile = position
+		nextTag.startPositionInFile = position;
 		[parent addChild:nextTag];
 
 		
