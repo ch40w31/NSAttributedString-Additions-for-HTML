@@ -281,6 +281,15 @@
 	return tmpString;
 }
 
+- (void) addStartHandler:(DTHTMLAttributedStringBuilderTagHandler)endHandler forTag:(NSString*)tag;
+{
+	[_tagStartHandlers setObject:[endHandler copy] forKey:tag];
+}
+- (void) addEndHandler:(DTHTMLAttributedStringBuilderTagHandler)endHandler forTag:(NSString*)tag;
+{
+	[_tagEndHandlers setObject:[endHandler copy] forKey:tag];
+}
+
 #pragma mark GCD
 
 - (void)_registerTagStartHandlers

@@ -34,4 +34,7 @@ typedef BOOL(^DTHTMLAttributedStringBuilderShouldFilterElementCallback)(DTHTMLAt
 
 @property (nonatomic, readonly, retain) DTHTMLParser *parser;
 
+- (void) addStartHandler:(DTHTMLAttributedStringBuilderTagHandler)endHandler forTag:(NSString*)tag;
+- (void) addEndHandler:(DTHTMLAttributedStringBuilderTagHandler)endHandler forTag:(NSString*)tag;
+
 @end
