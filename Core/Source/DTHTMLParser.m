@@ -118,6 +118,10 @@ void _characters(void *context, const xmlChar *chars, int len)
 	DTHTMLParser *myself = (__bridge DTHTMLParser *)context;
 	
 	NSString *string = [[NSString alloc] initWithBytes:chars length:len encoding:NSUTF8StringEncoding];
+	if (!string) {
+		// DIRTY: fallback when not UTF-8
+		string = [[NSString alloc] initWithBytes:chars length:len encoding:NSISOLatin1StringEncoding];
+	}
 	
 	[myself.delegate parser:myself foundCharacters:string];
 }
