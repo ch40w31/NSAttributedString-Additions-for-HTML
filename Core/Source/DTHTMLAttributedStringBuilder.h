@@ -10,6 +10,8 @@
 
 @class DTHTMLElement;
 @class DTHTMLAttributedStringBuilder;
+@class DTCSSStylesheet;
+
 
 typedef void(^DTHTMLAttributedStringBuilderWillFlushCallback)(DTHTMLElement *);
 
