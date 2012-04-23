@@ -548,7 +548,7 @@
 		else if ([lineHeight isNumeric])
 		{
 			//self.paragraphStyle.lineHeightMultiple = [lineHeight floatValue];
-			self.paragraphStyle.minimumLineHeight = fontDescriptor.pointSize * (CGFloat)[lineHeight intValue];
+			self.paragraphStyle.minimumLineHeight = fontDescriptor.pointSize * (CGFloat)[lineHeight floatValue];
 			self.paragraphStyle.maximumLineHeight = self.paragraphStyle.minimumLineHeight;
 		}
 		else // interpret as length

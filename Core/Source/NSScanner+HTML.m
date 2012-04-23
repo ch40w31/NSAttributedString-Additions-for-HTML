@@ -301,7 +301,7 @@
 	
 	if (value)
 	{
-		*value = attrValue;
+		*value = [attrValue stringByNormalizingWhitespace];
 	}
 	
 	return YES;
