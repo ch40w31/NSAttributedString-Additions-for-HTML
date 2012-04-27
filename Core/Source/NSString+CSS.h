@@ -25,6 +25,7 @@
  @param textSize The current size which the CSS size is relative to.
  @returns A float that is the size textSize be it %, em or just numbers .
  */
+- (CGFloat)pixelSizeOfCSSMeasureRelativeToCurrentTextSize:(CGFloat)textSize unit:(NSString**)unit;
 - (CGFloat)pixelSizeOfCSSMeasureRelativeToCurrentTextSize:(CGFloat)textSize;
 
 

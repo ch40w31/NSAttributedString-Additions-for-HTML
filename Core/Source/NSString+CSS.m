@@ -33,90 +33,55 @@
 	return tmpDict;
 }
 
+- (CGFloat)pixelSizeOfCSSMeasureRelativeToCurrentTextSize:(CGFloat)textSize unit:(NSString**)outUnit
+{
+	NSError *error = nil;
+	static NSRegularExpression *numericRegex = nil;
+	if (!numericRegex) {
+		numericRegex = [NSRegularExpression regularExpressionWithPattern:@"^([+-]?)(\\d*\\.\\d+|\\d+)([a-z]*|%?)" options:0 error:&error];
+	}
+	
+	NSArray *matches = [numericRegex matchesInString:self options:NSMatchingAnchored range:(NSRange){0, self.length}];
+	if (matches.count == 1) {
+		NSTextCheckingResult *result = [matches lastObject];
+		NSAssert([result numberOfRanges] == 4, @"Regular expression matching failes!");
+		
+		NSRange signRange = [result rangeAtIndex:1];
+		NSRange valueRange = [result rangeAtIndex:2];
+		NSRange unitRange = [result rangeAtIndex:3];
+		
+		BOOL negative = NO;
+		if (signRange.length > 0) {
+			negative = [@"-" isEqualToString:[self substringWithRange:signRange]];
+		}
+		
+		float value = [[self substringWithRange:valueRange] floatValue];
+
+		NSString *unit = nil;
+		if (unitRange.length > 0) {
+			unit = [self substringWithRange:unitRange];
+			
+			if ([@"%" isEqualToString:unit]) {
+				value = value * textSize / 100.0f;
+			} else if ([@"em" isEqualToString:unit]) {
+				value = value * textSize;
+			}
+			
+			if (outUnit) {
+				*outUnit = unit;
+			}
+		}
+
+		if (negative) value *= -1;
+			
+		return value;
+	} else {
+		return textSize;
+	}
+}
 - (CGFloat)pixelSizeOfCSSMeasureRelativeToCurrentTextSize:(CGFloat)textSize
 {
-	NSUInteger stringLength = [self length];
-	unichar *_characters = calloc(stringLength, sizeof(unichar));
-	[self getCharacters:_characters range:NSMakeRange(0, stringLength)];
-	
-	CGFloat value = 0;
-	
-	BOOL commaSeen = NO;
-	BOOL negative = NO;
-	NSUInteger digitsPastComma = 0;
-	
-	NSUInteger i=0;
-	
-	for (; i<stringLength; i++)
-	{
-		unichar ch = _characters[i];
-		
-		if (ch>='0' && ch<='9')
-		{
-			float digit = (float)(ch-'0');
-			value *= 10.0f;
-			value += digit;
-			
-			if (commaSeen)
-			{
-				digitsPastComma++;
-			}
-		}
-		else if (ch=='.')
-		{
-			commaSeen = YES;
-		}
-		else if (ch=='-') 
-		{
-			negative = YES;
-		}
-		else
-		{
-			// non-numeric character
-			break;
-		}
-	}
-	
-	if (commaSeen)
-	{
-		value /= powf(10.0f, digitsPastComma);
-	}
-	
-	// skip whitespace
-	while (i<stringLength && IS_WHITESPACE(_characters[i])) 
-	{
-		i++;
-	}
-	
-	if (i<stringLength)
-	{
-		unichar ch = _characters[i++];
-		
-		if (ch == '%')
-		{
-			// percent value
-			value *= textSize / 100.0f;
-		}
-		else if (ch == 'e')
-		{
-			if (i<stringLength)
-			{
-				if (_characters[i] == 'm')
-				{
-					// em value
-					value *= textSize;
-				}
-			}
-		}
-	}
-	
-	if (negative)
-	{
-		value *= -1;
-	}
-	
-	free(_characters);
-	return value;
+	return [self pixelSizeOfCSSMeasureRelativeToCurrentTextSize:textSize unit:nil];
 }
 
 - (NSArray *)arrayOfCSSShadowsWithCurrentTextSize:(CGFloat)textSize currentColor:(DTColor *)color
