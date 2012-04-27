@@ -1,5 +1,8 @@
 #import "DTCoreTextConstants.h"
 
+#import <ImageIO/ImageIO.h>
+
+
 // standard options
 
 NSString *NSBaseURLDocumentOption = @"NSBaseURLDocumentOption";
@@ -45,3 +48,30 @@ NSString *DTFieldAttribute = @"DTField";
 
 NSString *DTHTMLStartPositionAttribute = @"DTHTMLStartPositionAttribute";
 NSString *DTHTMLEndPositionAttribute   = @"DTHTMLEndPositionAttribute";
+
+
+CGSize DTSizeOfImageAtURL(NSURL *url)
+{
+	CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, NULL);
+	if (imageSource == NULL) {
+		return CGSizeZero;
+	}
+	
+	CGSize size = CGSizeMake(0.0, 0.0);
+	CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
+	if (imageProperties != NULL) {
+		CFNumberRef widthNum  = CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelWidth);
+		if (widthNum != NULL) {
+			CFNumberGetValue(widthNum, kCFNumberFloatType, &size.width);
+		}
+		
+		CFNumberRef heightNum = CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight);
+		if (heightNum != NULL) {
+			CFNumberGetValue(heightNum, kCFNumberFloatType, &size.height);
+		}
+		
+		CFRelease(imageProperties);
+	}
+	
+	return size;
+}

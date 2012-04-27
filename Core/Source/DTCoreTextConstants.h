@@ -55,3 +55,5 @@ extern NSString *DTFieldAttribute;
 
 extern NSString *DTHTMLStartPositionAttribute;
 extern NSString *DTHTMLEndPositionAttribute;
+
+CGSize DTSizeOfImageAtURL(NSURL *url);
