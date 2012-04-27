@@ -224,7 +224,7 @@
 	if (_textAttachment)
 	{
 		// ignore text, use unicode object placeholder
-		NSMutableAttributedString *tmpString = [[NSMutableAttributedString alloc] initWithString:UNICODE_OBJECT_PLACEHOLDER attributes:attributes];
+		NSMutableAttributedString *tmpString = [[NSMutableAttributedString alloc] initWithString:@" " attributes:attributes];
 		
 		return tmpString;
 	}
