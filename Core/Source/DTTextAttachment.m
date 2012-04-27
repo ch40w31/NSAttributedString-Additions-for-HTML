@@ -219,6 +219,15 @@
 	[encoder encodeInt:self.verticalAlignment forKey:@"verticalAlignment"];
 }
 
+#pragma mark - Description
+
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"<%@ %p> {contentType:%d, originalSize:%@, displaySize:%@, contentURL:%@, hyperLinkURL:%@, attributes: %@, verticalAlignment:%d}", NSStringFromClass([self class]), self, 
+			self.contentType, NSStringFromCGSize(self.originalSize), NSStringFromCGSize(self.displaySize), self.contentURL, 
+			self.hyperLinkURL, self.attributes, self.verticalAlignment];
+}
+
 #pragma mark -
 
 // makes a data URL of the image
