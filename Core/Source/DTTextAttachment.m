@@ -133,8 +133,7 @@
 			// inspect local file
 			if ([contentURL isFileURL])
 			{
-				DTImage *image = [[DTImage alloc] initWithContentsOfFile:[contentURL path]];
-				originalSize = image.size;
+				originalSize = DTSizeOfImageAtURL(contentURL);
 				
 				if (!displaySize.width || !displaySize.height)
 				{
