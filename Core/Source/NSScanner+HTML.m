@@ -301,7 +301,7 @@
 	
 	if (value)
 	{
-		*value = [attrValue stringByNormalizingWhitespace];
+		*value = [attrValue stringByTrimmingCharactersInSet:whiteCharacterSet];
 	}
 	
 	return YES;
