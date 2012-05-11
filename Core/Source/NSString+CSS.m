@@ -38,7 +38,7 @@
 	NSError *error = nil;
 	static NSRegularExpression *numericRegex = nil;
 	if (!numericRegex) {
-		numericRegex = [NSRegularExpression regularExpressionWithPattern:@"^([+-]?)(\\d*\\.\\d+|\\d+)([a-z]*|%?)" options:0 error:&error];
+		numericRegex = [NSRegularExpression regularExpressionWithPattern:@"^([+-]?)(\\d*\\.\\d+|\\d+)(%|[a-z]*)" options:0 error:&error];
 	}
 	
 	NSArray *matches = [numericRegex matchesInString:self options:NSMatchingAnchored range:(NSRange){0, self.length}];
@@ -65,6 +65,10 @@
 				value = value * textSize / 100.0f;
 			} else if ([@"em" isEqualToString:unit]) {
 				value = value * textSize;
+			} else if ([@"pt" isEqualToString:unit] || [@"px" isEqualToString:unit]) {
+				// intentionally do nothin'
+			} else {
+				NSLog(@"!!! unknown unit: %@", unit);
 			}
 			
 			if (outUnit) {
