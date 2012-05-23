@@ -1125,11 +1125,9 @@
 			return;
 		}
 		
-		if ([currentTag.tagName isEqualToString:@"style"])
-		{
-			NSString *styleBlock = [[NSString alloc] initWithData:CDATABlock encoding:NSUTF8StringEncoding];
-			[_globalStyleSheet parseStyleBlock:styleBlock];
-		}
+		NSString *string = [[NSString alloc] initWithData:CDATABlock encoding:NSUTF8StringEncoding];
+		
+		[self _handleTagContent:string];	
 	});
 }
 
