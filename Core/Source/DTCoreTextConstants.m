@@ -59,6 +59,8 @@ CGSize DTSizeOfImageAtURL(NSURL *url)
 	
 	CGSize size = CGSizeMake(0.0, 0.0);
 	CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
+	CFRelease(imageSource);
+	
 	if (imageProperties != NULL) {
 		CFNumberRef widthNum  = CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelWidth);
 		if (widthNum != NULL) {
@@ -71,7 +73,7 @@ CGSize DTSizeOfImageAtURL(NSURL *url)
 		}
 		
 		CFRelease(imageProperties);
-	}
+	}	
 	
 	return size;
 }
