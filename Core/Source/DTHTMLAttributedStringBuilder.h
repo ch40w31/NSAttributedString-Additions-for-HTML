@@ -32,7 +32,7 @@ typedef BOOL(^DTHTMLAttributedStringBuilderShouldFilterElementCallback)(DTHTMLAt
 @property (nonatomic, copy) DTHTMLAttributedStringBuilderWillFlushCallback willFlushCallback;
 
 @property (nonatomic, readonly, retain) NSURL *baseURL;
-@property (nonatomic, readonly, retain) DTCSSStylesheet *globalStyleSheet;
+@property (nonatomic, readwrite, retain) DTCSSStylesheet *globalStyleSheet;
 
 @property (nonatomic, readonly, retain) DTHTMLParser *parser;
 

@@ -139,7 +139,9 @@
 	baseURL = [_options objectForKey:NSBaseURLDocumentOption];
 	
 	// the combined style sheet for entire document
-	_globalStyleSheet = [DTCSSStylesheet defaultStyleSheet]; 
+	if (!_globalStyleSheet) {
+		_globalStyleSheet = [DTCSSStylesheet defaultStyleSheet]; 
+	}
 	
 	// do we have a default style sheet passed as option?
 	DTCSSStylesheet *defaultStylesheet = [_options objectForKey:DTDefaultStyleSheet];

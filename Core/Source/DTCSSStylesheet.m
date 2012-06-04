@@ -32,7 +32,7 @@ extern unsigned int default_css_len;
 	NSData *data = [NSData dataWithBytes:default_css length:default_css_len];
 	NSString *cssString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	
-	return [[DTCSSStylesheet alloc] initWithStyleBlock:cssString];
+	return [[[self class] alloc] initWithStyleBlock:cssString];
 }
 
 - (id)initWithStyleBlock:(NSString *)css
