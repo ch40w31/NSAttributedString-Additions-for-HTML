@@ -556,10 +556,6 @@
 			NSString *unit = nil;
 			float value = [lineHeight pixelSizeOfCSSMeasureRelativeToCurrentTextSize:fontDescriptor.pointSize unit:&unit];
 			
-			if (unit == nil) {
-				value = fontDescriptor.pointSize * value;
-			}
-
 			self.paragraphStyle.minimumLineHeight = value;
 			
 			self.paragraphStyle.maximumLineHeight = self.paragraphStyle.minimumLineHeight;

@@ -75,6 +75,10 @@
 				*outUnit = unit;
 			}
 		}
+		
+		if (!unit) {
+			value = textSize * value;
+		}
 
 		if (negative) value *= -1;
 			
