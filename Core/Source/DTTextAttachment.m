@@ -174,7 +174,7 @@
 		// still no display size? use max size
 		if (CGSizeEqualToSize(displaySize, CGSizeZero))
 		{
-			adjustedSize = maxImageSize;
+//			adjustedSize = maxImageSize;
 		}
 	}
 		
