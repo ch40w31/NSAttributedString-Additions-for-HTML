@@ -16,20 +16,30 @@
 - (NSDictionary *)dictionaryOfCSSStyles
 {
 	// font-size:14px;
-	NSScanner *scanner = [NSScanner scannerWithString:self];
-	
-	NSString *name = nil;
-	NSString *value = nil;
-	
+
 	NSMutableDictionary *tmpDict = [NSMutableDictionary dictionary];
-	
-	while ([scanner scanCSSAttribute:&name value:&value]) 
-	{
-		[tmpDict setObject:value forKey:name];
+
+	static NSRegularExpression *nameValueRegex = nil;
+	if (!nameValueRegex) {
+		NSError *error = nil;
+		nameValueRegex = [NSRegularExpression regularExpressionWithPattern:@"([\\w-]+)\\s*:\\s*([^;]+);?" options:0 error:&error];
+		if (!nameValueRegex) NSLog(@"!! could not create regex: %@", error);
 	}
 	
-	// converting to non-mutable costs 37.5% of method	
-	//	return [NSDictionary dictionaryWithDictionary:tmpDict];
+	NSArray *matches = [nameValueRegex matchesInString:self options:0 range:NSMakeRange(0, self.length)];
+	[matches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+		NSTextCheckingResult *result = obj;
+		NSAssert([result numberOfRanges] == 3, @"Regular expression matching failes!");
+		
+		NSRange nameRange = [result rangeAtIndex:1];
+		NSRange valueRange = [result rangeAtIndex:2];
+		
+		NSString *name = [self substringWithRange:nameRange];
+		NSString *value = [self substringWithRange:valueRange];
+		
+		[tmpDict setObject:value forKey:name];
+	}];
+	
 	return tmpDict;
 }
 
