@@ -94,14 +94,8 @@
 	dispatch_release(_stringParsingGroup);
 }
 
-- (BOOL)buildString
-{
-	// only with valid data
-	if (![_data length])
-	{
-		return NO;
-	}
-	
+- (void) setupStringBuilder
+{	
 	// register default handlers
 	[self _registerTagStartHandlers];
 	[self _registerTagEndHandlers];
@@ -116,17 +110,6 @@
 	
 	
 	_shouldFilterElementCallback = [[_options objectForKey:DTFilterElementsCallback] copy];
-	
-	
- 	// Specify the appropriate text encoding for the passed data, default is UTF8 
-	NSString *textEncodingName = [_options objectForKey:NSTextEncodingNameDocumentOption];
-	NSStringEncoding encoding = NSUTF8StringEncoding; // default
-	
-	if (textEncodingName)
-	{
-		CFStringEncoding cfEncoding = CFStringConvertIANACharSetNameToEncoding((__bridge CFStringRef)textEncodingName);
-		encoding = CFStringConvertEncodingToNSStringEncoding(cfEncoding);
-	}
 	
 	// custom option to scale text
 	textScale = [[_options objectForKey:NSTextSizeMultiplierDocumentOption] floatValue];
@@ -236,7 +219,16 @@
 	{
 		defaultParagraphStyle.listIndent = [defaultListIndent integerValue];
 	}
-	
+}
+
+- (BOOL) parseData:(NSData*)data
+{
+	// only with valid data
+	if (![data length])
+	{
+		return NO;
+	}
+		
 	DTHTMLElement *defaultTag = [[DTHTMLElement alloc] init];
 	defaultTag.fontDescriptor = defaultFontDescriptor;
 	defaultTag.paragraphStyle = defaultParagraphStyle;
@@ -257,11 +249,22 @@
 		}
 	}
 	
-	
 	currentTag = defaultTag; // our defaults are the root
 	
+	
+	// Specify the appropriate text encoding for the passed data, default is UTF8 
+	NSString *textEncodingName = [_options objectForKey:NSTextEncodingNameDocumentOption];
+	NSStringEncoding encoding = NSUTF8StringEncoding; // default
+	
+	if (textEncodingName)
+	{
+		CFStringEncoding cfEncoding = CFStringConvertIANACharSetNameToEncoding((__bridge CFStringRef)textEncodingName);
+		encoding = CFStringConvertEncodingToNSStringEncoding(cfEncoding);
+	}
+	
+	
 	// create a parser
-	self.parser = [[DTHTMLParser alloc] initWithData:_data encoding:encoding];
+	self.parser = [[DTHTMLParser alloc] initWithData:data encoding:encoding];
 	self.parser.delegate = (id)self;
 	
 	__block BOOL result;
@@ -276,6 +279,19 @@
 	_tagEndHandlers = nil;
 	
 	return result;
+}
+
+- (BOOL)buildString
+{
+	// only with valid data
+	if (![_data length])
+	{
+		return NO;
+	}
+	
+	[self setupStringBuilder];
+	
+	return [self parseData:_data];
 }
 
 - (NSAttributedString *)generatedAttributedString
