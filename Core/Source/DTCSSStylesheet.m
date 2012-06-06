@@ -24,6 +24,8 @@ extern unsigned int default_css_len;
 	NSMutableDictionary *_styles;
 }
 
+@synthesize entityStyleCache = _entityStyleCache;
+
 #pragma mark Creating Stylesheets
 
 + (DTCSSStylesheet *)defaultStyleSheet
@@ -265,6 +267,14 @@ extern unsigned int default_css_len;
 
 #pragma mark Accessing Style Information
 
+- (NSCache*) entityStyleCache
+{
+	if (!_entityStyleCache) {
+		_entityStyleCache = [[NSCache alloc] init];
+	}
+	return _entityStyleCache;
+}
+
 - (NSDictionary *)mergedStyleDictionaryForElement:(DTHTMLElement *)element
 {
 	// We are going to combine all the relevant styles for this tag.
@@ -273,6 +283,20 @@ extern unsigned int default_css_len;
 	
 	NSMutableDictionary *tmpDict = [NSMutableDictionary dictionary];
 	
+	NSString *styleString = [element attributeForKey:@"style"];	
+	NSString *classString = [element attributeForKey:@"class"];
+	NSString *idRule = [NSString stringWithFormat:@"#%@", [element attributeForKey:@"id"]];
+	
+	NSString *cacheKey = nil;
+	
+	if (!styleString || styleString.length == 0) {
+		cacheKey = [[NSArray arrayWithObjects:element.tagName, (classString ?: @""), (idRule ?: @""), nil] componentsJoinedByString:@" "];
+		NSDictionary *styles = [[self entityStyleCache] objectForKey:cacheKey];
+		if (styles) {
+			return styles;
+		}
+	}
+
 	// Get based on element
 	NSDictionary *byTagName = [self.styles objectForKey:element.tagName];
 	
@@ -282,7 +306,6 @@ extern unsigned int default_css_len;
 	}
 	
     // Get based on class(es)
-	NSString *classString = [element attributeForKey:@"class"];
 	NSArray *classes = [classString componentsSeparatedByString:@" "];
 	
 	for (NSString *class in classes) 
@@ -305,7 +328,6 @@ extern unsigned int default_css_len;
 	}
 	
 	// Get based on id
-	NSString *idRule = [NSString stringWithFormat:@"#%@", [element attributeForKey:@"id"]];
 	NSDictionary *byID = [_styles objectForKey:idRule];
 	
 	if (byID) 
@@ -314,8 +336,6 @@ extern unsigned int default_css_len;
 	}
 	
 	// Get tag's local style attribute
-	NSString *styleString = [element attributeForKey:@"style"];
-	
 	if ([styleString length])
 	{
 		NSMutableDictionary *localStyles = [[styleString dictionaryOfCSSStyles] mutableCopy];
@@ -328,6 +348,10 @@ extern unsigned int default_css_len;
 	
 	if ([tmpDict count])
 	{
+		if (cacheKey) {
+			[[self entityStyleCache] setObject:tmpDict forKey:cacheKey];
+		}
+		
 		return tmpDict;
 	}
 	else

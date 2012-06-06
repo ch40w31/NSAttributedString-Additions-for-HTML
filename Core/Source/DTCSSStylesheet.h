@@ -18,6 +18,8 @@
 @interface DTCSSStylesheet : NSObject
 
 
+@property (nonatomic, readonly, retain) NSCache *entityStyleCache;
+
 /**
  @name Creating Stylesheets
  */
