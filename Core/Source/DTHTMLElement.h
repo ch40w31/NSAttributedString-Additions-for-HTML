@@ -38,7 +38,7 @@ typedef enum
 
 @interface DTHTMLElement : NSObject <NSCopying>
 
-@property (nonatomic, strong) DTHTMLElement *parent;
+@property (nonatomic, weak) DTHTMLElement *parent;
 @property (nonatomic, copy) DTCoreTextFontDescriptor *fontDescriptor;
 @property (nonatomic, copy) DTCoreTextParagraphStyle *paragraphStyle;
 @property (nonatomic, strong) DTTextAttachment *textAttachment;

@@ -21,8 +21,6 @@
 
 @implementation DTHTMLElement
 {
-	DTHTMLElement *parent;
-	
 	DTCoreTextFontDescriptor *fontDescriptor;
 	DTCoreTextParagraphStyle *paragraphStyle;
 	DTTextAttachment *_textAttachment;
