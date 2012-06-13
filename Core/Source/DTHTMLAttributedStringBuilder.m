@@ -274,11 +274,16 @@
 	dispatch_group_wait(_stringParsingGroup, DISPATCH_TIME_FOREVER);
 	dispatch_group_wait(_stringAssemblyGroup, DISPATCH_TIME_FOREVER);
 	
+	return result;
+}
+
+- (void) finishParsing
+{
+	
 	// clean up handlers because they retained self
 	_tagStartHandlers = nil;
 	_tagEndHandlers = nil;
-	
-	return result;
+
 }
 
 - (BOOL)buildString

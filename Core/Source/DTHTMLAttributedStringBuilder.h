@@ -45,5 +45,7 @@ typedef BOOL(^DTHTMLAttributedStringBuilderShouldFilterElementCallback)(DTHTMLAt
 - (void) setupStringBuilder;
 - (BOOL) parseData:(NSData*)data;
 
+- (void) finishParsing;
+
 
 @end
