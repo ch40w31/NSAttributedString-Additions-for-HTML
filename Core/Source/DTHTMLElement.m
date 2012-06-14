@@ -25,7 +25,7 @@
 	DTCoreTextParagraphStyle *paragraphStyle;
 	DTTextAttachment *_textAttachment;
 	DTTextAttachmentVerticalAlignment _textAttachmentAlignment;
-	NSURL *link;
+	NSString *link;
 	
 	DTColor *_textColor;
 	DTColor *backgroundColor;
@@ -879,7 +879,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-	DTHTMLElement *newObject = [[DTHTMLElement allocWithZone:zone] init];
+	DTHTMLElement *newObject = [[[self class] allocWithZone:zone] init];
 	
 	newObject.fontDescriptor = self.fontDescriptor; // copy
 	newObject.paragraphStyle = self.paragraphStyle; // copy

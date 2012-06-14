@@ -221,6 +221,11 @@
 	}
 }
 
+- (Class) htmlElementClass
+{
+	return [DTHTMLElement class];
+}
+
 - (BOOL) parseData:(NSData*)data
 {
 	// only with valid data
@@ -229,7 +234,7 @@
 		return NO;
 	}
 		
-	DTHTMLElement *defaultTag = [[DTHTMLElement alloc] init];
+	DTHTMLElement *defaultTag = [[[self htmlElementClass] alloc] init];
 	defaultTag.fontDescriptor = defaultFontDescriptor;
 	defaultTag.paragraphStyle = defaultParagraphStyle;
 	defaultTag.textScale = textScale;
@@ -450,7 +455,7 @@
 		NSString *cleanString = [[currentTag attributeForKey:@"href"] stringByReplacingOccurrencesOfString:@"\n" withString:@""];
 		cleanString = [cleanString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 		
-		NSURL *link = [NSURL URLWithString:cleanString];
+/*		NSURL *link = [NSURL URLWithString:cleanString];
 		
 		// deal with relative URL
 		if (![link scheme])
@@ -471,9 +476,9 @@
 			{
 				link = baseURL;
 			}
-		}
+		}*/
 		
-		currentTag.link = link;
+		currentTag.link = cleanString;
 	};
 	
 	[_tagStartHandlers setObject:[aBlock copy] forKey:@"a"];
